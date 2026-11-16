@@ -9,6 +9,7 @@ import com.dropzone.item.GunItem;
 import com.dropzone.item.GunStats;
 import com.dropzone.item.HealingItem;
 import com.dropzone.item.Tier;
+import com.dropzone.hammer.HammerItem;
 import com.dropzone.storage.BoxTier;
 import com.dropzone.storage.BoxUpgradeItem;
 import com.dropzone.storage.StorageBoxBlock;
@@ -107,6 +108,8 @@ public final class ModItems {
     public static final RegistryObject<Item> GOLD_BOX_UPGRADE = ITEMS.register("gold_box_upgrade", () -> new BoxUpgradeItem(BoxTier.IRON, new Item.Properties()));
     public static final RegistryObject<Item> DIAMOND_BOX_UPGRADE = ITEMS.register("diamond_box_upgrade", () -> new BoxUpgradeItem(BoxTier.GOLD, new Item.Properties()));
 
+    public static final RegistryObject<Item> HAMMER = ITEMS.register("hammer", () -> new HammerItem(new Item.Properties()));
+
     private static RegistryObject<Item> boxItem(String name, RegistryObject<StorageBoxBlock> block) {
         return ITEMS.register(name, () -> new StorageBoxItem(block.get(), new Item.Properties()));
     }
@@ -118,7 +121,7 @@ public final class ModItems {
                 BANDAGE, MED_KIT, MINI_SHIELD, SHIELD_POTION,
                 GLIDER_AZURE, GLIDER_CRIMSON, GLIDER_EMERALD, GLIDER_SUNSET, CANNON_SADDLE,
                 COPPER_STORAGE_BOX, IRON_STORAGE_BOX, GOLD_STORAGE_BOX, DIAMOND_STORAGE_BOX,
-                IRON_BOX_UPGRADE, GOLD_BOX_UPGRADE, DIAMOND_BOX_UPGRADE,
+                IRON_BOX_UPGRADE, GOLD_BOX_UPGRADE, DIAMOND_BOX_UPGRADE, HAMMER,
                 GUN_BARREL, GUN_STOCK, FIRING_MECHANISM);
     }
 

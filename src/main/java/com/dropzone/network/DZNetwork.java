@@ -34,6 +34,8 @@ public final class DZNetwork {
                 .encoder(C2SBoxClick::encode).decoder(C2SBoxClick::decode).consumerMainThread(C2SBoxClick::handle).add();
         CHANNEL.messageBuilder(S2CBoxContents.class, id++, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(S2CBoxContents::encode).decoder(S2CBoxContents::decode).consumerMainThread(S2CBoxContents::handle).add();
+        CHANNEL.messageBuilder(C2SHammerSelect.class, id++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(C2SHammerSelect::encode).decoder(C2SHammerSelect::decode).consumerMainThread(C2SHammerSelect::handle).add();
     }
 
     public static void sendToServer(Object message) {

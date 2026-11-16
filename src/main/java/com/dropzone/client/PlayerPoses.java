@@ -95,6 +95,51 @@ public final class PlayerPoses {
                 m.head.xRot = up ? -0.25F : 0.2F;
                 m.head.yRot = up ? -0.3F : 0.3F;
             }
+            case GRIDDY -> {
+                // Heel-tap strut: legs kick out in turn, arms pump; every other bar the hands go up like goggles.
+                float beat = t * PI / 5.0F;
+                float s = Mth.sin(beat);
+                boolean goggles = Mth.floor(t / 40.0F) % 2 == 1;
+                m.rightLeg.xRot = s > 0 ? -s * 0.7F : 0;
+                m.leftLeg.xRot = s < 0 ? s * 0.7F : 0;
+                m.rightLeg.zRot = 0.08F;
+                m.leftLeg.zRot = -0.08F;
+                if (goggles) {
+                    set(m.rightArm, -2.5F, 0, 0.55F);
+                    set(m.leftArm, -2.5F, 0, -0.55F);
+                    m.head.xRot = -0.05F;
+                } else {
+                    set(m.rightArm, -0.6F + s * 0.9F, 0, 0.25F);
+                    set(m.leftArm, -0.6F - s * 0.9F, 0, -0.25F);
+                    m.head.xRot = 0.15F;
+                }
+                m.head.yRot = s * 0.15F;
+                m.body.yRot = s * 0.1F;
+            }
+            case TWERK -> {
+                // Low squat with the hips bouncing; legs re-attached to the tilted torso so nothing floats.
+                float lean = 0.55F + Mth.sin(t * 1.6F) * 0.12F;
+                float splay = 0.28F;
+                // Drop the whole upper body so the splayed legs still reach the ground (feet at y = 24).
+                float drop = 24.0F - 12.0F * Mth.cos(lean) - 12.0F * Mth.cos(splay);
+                m.body.xRot = lean;
+                m.body.y = drop;
+                m.head.y = drop;
+                m.rightArm.y = 2.0F + drop;
+                m.leftArm.y = 2.0F + drop;
+                float hipY = drop + 12.0F * Mth.cos(lean);
+                float hipZ = 12.0F * Mth.sin(lean);
+                m.rightLeg.y = hipY;
+                m.leftLeg.y = hipY;
+                m.rightLeg.z = hipZ;
+                m.leftLeg.z = hipZ;
+                set(m.rightLeg, 0, 0, splay);
+                set(m.leftLeg, 0, 0, -splay);
+                set(m.rightArm, -0.9F, 0, -0.15F);
+                set(m.leftArm, -0.9F, 0, 0.15F);
+                m.head.xRot = -0.35F;
+                m.head.yRot = 0;
+            }
             case SWING -> {
                 float s = Mth.sin(t * 0.4F);
                 set(m.rightArm, -0.5F, 0, s * 0.8F);

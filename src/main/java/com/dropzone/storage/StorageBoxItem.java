@@ -42,7 +42,7 @@ public class StorageBoxItem extends BlockItem {
             tooltip.add(Component.translatable("tooltip.dropzone.box_empty").withStyle(ChatFormatting.DARK_GRAY));
         }
         if (tier.next() != null) {
-            tooltip.add(Component.translatable("tooltip.dropzone.box_upgrade_hint",
+            tooltip.add(Component.translatable("tooltip.dropzone.box_upgrade_hint2",
                     Component.translatable("item.dropzone." + tier.next().id + "_box_upgrade")).withStyle(ChatFormatting.DARK_AQUA));
         }
     }

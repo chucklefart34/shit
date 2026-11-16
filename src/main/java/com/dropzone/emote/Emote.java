@@ -16,7 +16,9 @@ public enum Emote {
     FACEPALM(false, null),
     ROBOT(true, new int[]{6, -1, 6, -1, 9, -1, 6, -1, 4, -1, 4, -1, 1, -1, 4, 6}),
     DISCO(true, new int[]{13, 13, 16, -1, 13, 11, 13, -1, 18, 16, 13, -1, 11, 13, 9, -1}),
-    SWING(true, new int[]{8, 11, 13, 11, 8, -1, 6, 8, 11, -1, 13, 15, 16, 15, 13, -1});
+    SWING(true, new int[]{8, 11, 13, 11, 8, -1, 6, 8, 11, -1, 13, 15, 16, 15, 13, -1}),
+    GRIDDY(true, new int[]{4, -1, 4, 7, -1, 9, 7, -1, 4, -1, 4, 7, -1, 11, 9, 7}),
+    TWERK(true, new int[]{1, 1, -1, 1, 8, -1, 6, -1, 1, 1, -1, 1, 13, 11, 8, -1});
 
     private final boolean dance;
     private final int[] melody;

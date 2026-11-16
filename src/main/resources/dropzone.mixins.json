@@ -7,7 +7,9 @@
   "mixins": [
     "MobMixin",
     "LivingEntityMixin",
-    "LivingEntityAccessor"
+    "LivingEntityAccessor",
+    "PlayerTrashMixin",
+    "InventoryMenuMixin"
   ],
   "client": [
     "PlayerModelMixin"

@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * Canopy with two drooping wings, two struts and two cords down to the hands.
+ * Hang glider: arched five-panel sail, keel, A-frame and a control bar at hand height.
  * Model space follows entity models: 16 units per block, +Y is down.
  */
 public class GliderModel extends Model {
@@ -32,23 +32,36 @@ public class GliderModel extends Model {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
 
-        root.addOrReplaceChild("canopy", CubeListBuilder.create().texOffs(0, 0)
-                .addBox(-12.0F, -1.0F, -10.0F, 24, 2, 20), PartPose.ZERO);
-        root.addOrReplaceChild("wing_left", CubeListBuilder.create().texOffs(0, 22)
-                .addBox(-14.0F, -1.0F, -10.0F, 14, 2, 20), PartPose.offsetAndRotation(-12.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.38F));
-        root.addOrReplaceChild("wing_right", CubeListBuilder.create().texOffs(0, 22).mirror()
-                .addBox(0.0F, -1.0F, -10.0F, 14, 2, 20), PartPose.offsetAndRotation(12.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.38F));
+        // Arched sail: a flat centre panel, inner wings and outer wings that droop more at each joint.
+        root.addOrReplaceChild("sail_center", CubeListBuilder.create().texOffs(0, 0)
+                .addBox(-5.0F, -0.5F, -11.0F, 10, 1, 22), PartPose.ZERO);
+        PartDefinition innerL = root.addOrReplaceChild("sail_inner_left", CubeListBuilder.create().texOffs(64, 0)
+                .addBox(-10.0F, -0.5F, -11.0F, 10, 1, 22), PartPose.offsetAndRotation(-5.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.22F));
+        PartDefinition innerR = root.addOrReplaceChild("sail_inner_right", CubeListBuilder.create().texOffs(64, 0).mirror()
+                .addBox(0.0F, -0.5F, -11.0F, 10, 1, 22), PartPose.offsetAndRotation(5.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.22F));
+        innerL.addOrReplaceChild("sail_outer_left", CubeListBuilder.create().texOffs(0, 23)
+                .addBox(-9.0F, -0.5F, -10.0F, 9, 1, 20), PartPose.offsetAndRotation(-10.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.35F));
+        innerR.addOrReplaceChild("sail_outer_right", CubeListBuilder.create().texOffs(0, 23).mirror()
+                .addBox(0.0F, -0.5F, -10.0F, 9, 1, 20), PartPose.offsetAndRotation(10.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.35F));
 
-        // Struts: from each hand straight up to the canopy edge.
-        root.addOrReplaceChild("strut_left", CubeListBuilder.create().texOffs(0, 44)
-                .addBox(-0.5F, -14.5F, -0.5F, 1, 15, 1), PartPose.offsetAndRotation(-7.0F, 15.0F, 0.0F, 0.0F, 0.0F, -0.21F));
-        root.addOrReplaceChild("strut_right", CubeListBuilder.create().texOffs(0, 44)
-                .addBox(-0.5F, -14.5F, -0.5F, 1, 15, 1), PartPose.offsetAndRotation(7.0F, 15.0F, 0.0F, 0.0F, 0.0F, 0.21F));
-        // Cords: from each hand out to the wing tips.
-        root.addOrReplaceChild("cord_left", CubeListBuilder.create().texOffs(8, 40)
-                .addBox(-0.25F, -20.0F, -0.25F, 0.5F, 20.0F, 0.5F), PartPose.offsetAndRotation(-7.0F, 15.0F, 0.0F, 0.0F, 0.0F, -1.0F));
-        root.addOrReplaceChild("cord_right", CubeListBuilder.create().texOffs(8, 40)
-                .addBox(-0.25F, -20.0F, -0.25F, 0.5F, 20.0F, 0.5F), PartPose.offsetAndRotation(7.0F, 15.0F, 0.0F, 0.0F, 0.0F, 1.0F));
+        // Keel running nose to tail under the sail.
+        root.addOrReplaceChild("keel", CubeListBuilder.create().texOffs(64, 23)
+                .addBox(-0.5F, 0.5F, -13.0F, 1, 1, 26), PartPose.ZERO);
+
+        // A-frame down-tubes from the keel to the ends of the control bar.
+        root.addOrReplaceChild("tube_left", CubeListBuilder.create().texOffs(0, 46)
+                .addBox(-0.5F, 0.0F, -0.5F, 1, 16, 1), PartPose.offsetAndRotation(0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.52F));
+        root.addOrReplaceChild("tube_right", CubeListBuilder.create().texOffs(0, 46)
+                .addBox(-0.5F, 0.0F, -0.5F, 1, 16, 1), PartPose.offsetAndRotation(0.0F, 1.0F, 0.0F, 0.0F, 0.0F, -0.52F));
+        // Control bar the rider holds.
+        root.addOrReplaceChild("control_bar", CubeListBuilder.create().texOffs(8, 46)
+                .addBox(-9.0F, 14.5F, -0.5F, 18, 1, 1), PartPose.ZERO);
+
+        // Rigging from the bar ends up to the wing tips.
+        root.addOrReplaceChild("cord_left", CubeListBuilder.create().texOffs(120, 0)
+                .addBox(-0.25F, -15.8F, -0.25F, 0.5F, 15.8F, 0.5F), PartPose.offsetAndRotation(-9.0F, 15.0F, 0.0F, 0.0F, 0.0F, -1.0F));
+        root.addOrReplaceChild("cord_right", CubeListBuilder.create().texOffs(120, 0)
+                .addBox(-0.25F, -15.8F, -0.25F, 0.5F, 15.8F, 0.5F), PartPose.offsetAndRotation(9.0F, 15.0F, 0.0F, 0.0F, 0.0F, 1.0F));
 
         return LayerDefinition.create(mesh, 128, 64);
     }

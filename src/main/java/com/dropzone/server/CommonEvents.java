@@ -103,6 +103,14 @@ public final class CommonEvents {
     }
 
     @SubscribeEvent
+    public static void onClone(PlayerEvent.Clone event) {
+        event.getOriginal().reviveCaps();
+        net.minecraft.world.item.ItemStack trash = ((com.dropzone.trash.TrashHolder) event.getOriginal()).dropzone$getTrash().getItem(0);
+        ((com.dropzone.trash.TrashHolder) event.getEntity()).dropzone$getTrash().setItem(0, trash.copy());
+        event.getOriginal().invalidateCaps();
+    }
+
+    @SubscribeEvent
     public static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         ServerState.forget(event.getEntity().getUUID());
     }

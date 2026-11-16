@@ -59,6 +59,7 @@ public final class ClientSetup {
     public static void onRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.ROCKET.get(), ctx -> new ThrownItemRenderer<RocketEntity>(ctx, 1.4F, true));
         event.registerEntityRenderer(ModEntities.GRENADE.get(), ctx -> new ThrownItemRenderer<GrenadeEntity>(ctx, 0.75F, false));
+        event.registerBlockEntityRenderer(ModBlocks.CARVED_BE.get(), CarvedBlockRenderer::new);
         event.registerEntityRenderer(ModEntities.CANNON_FIREBALL.get(), ctx -> new ThrownItemRenderer<CannonFireballEntity>(ctx, 3.0F, true));
     }
 

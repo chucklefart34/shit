@@ -14,6 +14,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.client.event.ContainerScreenEvent;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.resources.ResourceLocation;
+import com.dropzone.trash.TrashSlot;
 import com.dropzone.network.C2SFireGun;
 import com.dropzone.network.C2SGlider;
 import com.dropzone.network.C2SReload;
@@ -380,6 +384,25 @@ public final class ClientEvents {
             ps.popPose();
         }
         buffers.endBatch();
+    }
+
+    private static final ResourceLocation TRASH_ICON = new ResourceLocation(DropZone.MODID, "textures/gui/trash.png");
+
+    @SubscribeEvent
+    public static void onInventoryBackground(ContainerScreenEvent.Render.Background event) {
+        if (!(event.getContainerScreen() instanceof InventoryScreen screen)) return;
+        for (net.minecraft.world.inventory.Slot slot : screen.getMenu().slots) {
+            if (!(slot instanceof TrashSlot) || !slot.isActive()) continue;
+            var g = event.getGuiGraphics();
+            int x = screen.getGuiLeft() + slot.x;
+            int y = screen.getGuiTop() + slot.y;
+            g.fill(x - 1, y - 1, x + 17, y, 0xFF373737);
+            g.fill(x - 1, y - 1, x, y + 17, 0xFF373737);
+            g.fill(x, y + 16, x + 17, y + 17, 0xFFFFFFFF);
+            g.fill(x + 16, y, x + 17, y + 17, 0xFFFFFFFF);
+            g.fill(x, y, x + 16, y + 16, 0xFF8B8B8B);
+            if (!slot.hasItem()) g.blit(TRASH_ICON, x, y, 0, 0, 16, 16, 16, 16);
+        }
     }
 
     @SubscribeEvent

@@ -132,7 +132,7 @@ public class EmoteWheelScreen extends Screen {
             int y = Math.round(cy + Mth.sin(mid) * lr);
             int textColor = i == hovered ? 0xFFFFFF : 0xD0D0D0;
             g.drawCenteredString(font, Component.translatable(EMOTES[i].translationKey()), x, y - 6, textColor);
-            g.drawCenteredString(font, Component.literal(String.valueOf(i + 1)), x, y + 5, 0x808080);
+            if (i < 10) g.drawCenteredString(font, Component.literal(String.valueOf((i + 1) % 10)), x, y + 5, 0x808080);
         }
 
         Component center = hovered >= 0 ? Component.translatable(EMOTES[hovered].translationKey())
@@ -170,6 +170,10 @@ public class EmoteWheelScreen extends Screen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode >= GLFW.GLFW_KEY_1 && keyCode < GLFW.GLFW_KEY_1 + EMOTES.length) {
             select(keyCode - GLFW.GLFW_KEY_1);
+            return true;
+        }
+        if (keyCode == GLFW.GLFW_KEY_0 && EMOTES.length >= 10) {
+            select(9);
             return true;
         }
         if (clickMode && ticksOpen > 2 && Keys.EMOTE_WHEEL.matches(keyCode, scanCode)) {

@@ -27,6 +27,7 @@ public class DropZone {
         ModBlocks.BLOCKS.register(modBus);
         ModBlocks.BLOCK_ENTITIES.register(modBus);
         ModBlocks.MENUS.register(modBus);
+        ModBlocks.RECIPES.register(modBus);
         ModItems.ITEMS.register(modBus);
         ModEntities.ENTITIES.register(modBus);
         ModSounds.SOUNDS.register(modBus);
