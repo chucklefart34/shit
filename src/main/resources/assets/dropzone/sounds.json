@@ -1,0 +1,98 @@
+{
+  "gun.pistol": {
+    "subtitle": "subtitles.dropzone.gun.shot",
+    "sounds": [
+      {
+        "name": "dropzone:gun/pistol"
+      }
+    ]
+  },
+  "gun.smg": {
+    "subtitle": "subtitles.dropzone.gun.shot",
+    "sounds": [
+      {
+        "name": "dropzone:gun/smg"
+      }
+    ]
+  },
+  "gun.rifle": {
+    "subtitle": "subtitles.dropzone.gun.shot",
+    "sounds": [
+      {
+        "name": "dropzone:gun/rifle"
+      }
+    ]
+  },
+  "gun.shotgun": {
+    "subtitle": "subtitles.dropzone.gun.shotgun",
+    "sounds": [
+      {
+        "name": "dropzone:gun/shotgun"
+      }
+    ]
+  },
+  "gun.sniper": {
+    "subtitle": "subtitles.dropzone.gun.sniper",
+    "sounds": [
+      {
+        "name": "dropzone:gun/sniper"
+      }
+    ]
+  },
+  "gun.rocket": {
+    "subtitle": "subtitles.dropzone.gun.rocket",
+    "sounds": [
+      {
+        "name": "dropzone:gun/rocket"
+      }
+    ]
+  },
+  "gun.reload_start": {
+    "subtitle": "subtitles.dropzone.gun.reload",
+    "sounds": [
+      {
+        "name": "dropzone:gun/reload_start"
+      }
+    ]
+  },
+  "gun.reload_end": {
+    "subtitle": "subtitles.dropzone.gun.reload_done",
+    "sounds": [
+      {
+        "name": "dropzone:gun/reload_end"
+      }
+    ]
+  },
+  "gun.dry_fire": {
+    "subtitle": "subtitles.dropzone.gun.dry_fire",
+    "sounds": [
+      {
+        "name": "dropzone:gun/dry_fire"
+      }
+    ]
+  },
+  "gun.hitmarker": {
+    "subtitle": "subtitles.dropzone.gun.hit",
+    "sounds": [
+      {
+        "name": "dropzone:gun/hitmarker"
+      }
+    ]
+  },
+  "gun.headshot": {
+    "subtitle": "subtitles.dropzone.gun.headshot",
+    "sounds": [
+      {
+        "name": "dropzone:gun/headshot"
+      }
+    ]
+  },
+  "glider.deploy": {
+    "subtitle": "subtitles.dropzone.glider.deploy",
+    "sounds": [
+      {
+        "name": "dropzone:glider/deploy"
+      }
+    ]
+  }
+}

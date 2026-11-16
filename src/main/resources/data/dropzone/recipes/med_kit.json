@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "LRL",
+    "BMB",
+    "LLL"
+  ],
+  "key": {
+    "L": {
+      "tag": "forge:leather"
+    },
+    "R": {
+      "tag": "forge:dyes/red"
+    },
+    "B": {
+      "item": "dropzone:bandage"
+    },
+    "M": {
+      "item": "minecraft:glistering_melon_slice"
+    }
+  },
+  "result": {
+    "item": "dropzone:med_kit",
+    "count": 1
+  },
+  "show_notification": true
+}

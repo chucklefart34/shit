@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:glass_bottle"
+    },
+    {
+      "tag": "forge:gems/lapis"
+    },
+    {
+      "tag": "forge:gems/lapis"
+    },
+    {
+      "tag": "forge:dusts/glowstone"
+    },
+    {
+      "tag": "forge:ingots/gold"
+    }
+  ],
+  "result": {
+    "item": "dropzone:shield_potion",
+    "count": 1
+  }
+}

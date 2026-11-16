@@ -1,0 +1,13 @@
+{
+  "type": "dropzone:add_item",
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/woodland_mansion"
+    }
+  ],
+  "item": "dropzone:rocket",
+  "chance": 0.4,
+  "min": 2,
+  "max": 4
+}

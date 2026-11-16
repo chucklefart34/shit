@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPL",
+    "P  "
+  ],
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "L": {
+      "tag": "forge:leather"
+    }
+  },
+  "result": {
+    "item": "dropzone:gun_stock",
+    "count": 1
+  },
+  "show_notification": true
+}

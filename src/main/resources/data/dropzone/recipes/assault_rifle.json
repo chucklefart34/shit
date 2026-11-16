@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "SIB",
+    "GM "
+  ],
+  "key": {
+    "S": {
+      "item": "dropzone:gun_stock"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "B": {
+      "item": "dropzone:gun_barrel"
+    },
+    "G": {
+      "tag": "forge:ingots/gold"
+    },
+    "M": {
+      "item": "dropzone:firing_mechanism"
+    }
+  },
+  "result": {
+    "item": "dropzone:assault_rifle",
+    "count": 1
+  },
+  "show_notification": true
+}

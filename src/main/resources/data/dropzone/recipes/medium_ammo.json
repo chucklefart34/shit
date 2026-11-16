@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "forge:ingots/copper"
+    },
+    {
+      "tag": "forge:gunpowder"
+    },
+    {
+      "tag": "forge:ingots/iron"
+    }
+  ],
+  "result": {
+    "item": "dropzone:medium_ammo",
+    "count": 12
+  }
+}

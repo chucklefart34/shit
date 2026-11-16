@@ -1,0 +1,13 @@
+{
+  "type": "dropzone:add_item",
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/pillager_outpost"
+    }
+  ],
+  "item": "dropzone:medium_ammo",
+  "chance": 0.5,
+  "min": 8,
+  "max": 24
+}

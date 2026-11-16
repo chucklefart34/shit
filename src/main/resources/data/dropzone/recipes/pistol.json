@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "IIB",
+    "M  "
+  ],
+  "key": {
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "B": {
+      "item": "dropzone:gun_barrel"
+    },
+    "M": {
+      "item": "dropzone:firing_mechanism"
+    }
+  },
+  "result": {
+    "item": "dropzone:pistol",
+    "count": 1
+  },
+  "show_notification": true
+}

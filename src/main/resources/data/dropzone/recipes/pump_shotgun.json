@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "SBB",
+    " M "
+  ],
+  "key": {
+    "S": {
+      "item": "dropzone:gun_stock"
+    },
+    "B": {
+      "item": "dropzone:gun_barrel"
+    },
+    "M": {
+      "item": "dropzone:firing_mechanism"
+    }
+  },
+  "result": {
+    "item": "dropzone:pump_shotgun",
+    "count": 1
+  },
+  "show_notification": true
+}

@@ -1,0 +1,13 @@
+{
+  "type": "dropzone:add_item",
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/shipwreck_supply"
+    }
+  ],
+  "item": "dropzone:bandage",
+  "chance": 0.3,
+  "min": 1,
+  "max": 4
+}

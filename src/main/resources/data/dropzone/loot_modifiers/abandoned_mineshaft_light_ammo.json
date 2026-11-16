@@ -1,0 +1,13 @@
+{
+  "type": "dropzone:add_item",
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/abandoned_mineshaft"
+    }
+  ],
+  "item": "dropzone:light_ammo",
+  "chance": 0.4,
+  "min": 8,
+  "max": 20
+}

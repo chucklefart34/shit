@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:firework_rocket"
+    },
+    {
+      "item": "minecraft:tnt"
+    },
+    {
+      "tag": "forge:ingots/iron"
+    }
+  ],
+  "result": {
+    "item": "dropzone:rocket",
+    "count": 2
+  }
+}

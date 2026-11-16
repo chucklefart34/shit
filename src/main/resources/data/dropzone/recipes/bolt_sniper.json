@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "SYB",
+    " MD"
+  ],
+  "key": {
+    "S": {
+      "item": "dropzone:gun_stock"
+    },
+    "Y": {
+      "item": "minecraft:spyglass"
+    },
+    "B": {
+      "item": "dropzone:gun_barrel"
+    },
+    "M": {
+      "item": "dropzone:firing_mechanism"
+    },
+    "D": {
+      "tag": "forge:gems/diamond"
+    }
+  },
+  "result": {
+    "item": "dropzone:bolt_sniper",
+    "count": 1
+  },
+  "show_notification": true
+}

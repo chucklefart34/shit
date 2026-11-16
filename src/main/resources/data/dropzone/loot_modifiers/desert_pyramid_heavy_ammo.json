@@ -1,0 +1,13 @@
+{
+  "type": "dropzone:add_item",
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/desert_pyramid"
+    }
+  ],
+  "item": "dropzone:heavy_ammo",
+  "chance": 0.3,
+  "min": 2,
+  "max": 6
+}

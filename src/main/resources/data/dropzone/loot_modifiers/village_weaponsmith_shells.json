@@ -1,0 +1,13 @@
+{
+  "type": "dropzone:add_item",
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/village/village_weaponsmith"
+    }
+  ],
+  "item": "dropzone:shells",
+  "chance": 0.4,
+  "min": 4,
+  "max": 12
+}

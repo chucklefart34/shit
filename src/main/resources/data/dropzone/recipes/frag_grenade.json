@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " N ",
+    "ITI",
+    " I "
+  ],
+  "key": {
+    "N": {
+      "tag": "forge:nuggets/iron"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "T": {
+      "item": "minecraft:tnt"
+    }
+  },
+  "result": {
+    "item": "dropzone:frag_grenade",
+    "count": 4
+  },
+  "show_notification": true
+}

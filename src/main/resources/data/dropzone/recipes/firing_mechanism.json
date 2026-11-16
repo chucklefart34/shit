@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " N ",
+    "IRI",
+    " T "
+  ],
+  "key": {
+    "N": {
+      "tag": "forge:nuggets/iron"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "T": {
+      "item": "minecraft:tripwire_hook"
+    }
+  },
+  "result": {
+    "item": "dropzone:firing_mechanism",
+    "count": 1
+  },
+  "show_notification": true
+}
