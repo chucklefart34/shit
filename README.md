@@ -21,6 +21,10 @@ Test in a dev client with `gradlew runClient`.
 | Reload | **R** |
 | Emote wheel | **G**: hold, point, release (or tap, then click / press 1-8) |
 | Deploy / stow glider | **Jump** while falling (glider anywhere in inventory) |
+| Saddle a mob | Right-click it with a **Cannon Saddle** |
+| Ride / unsaddle | Empty hand right-click / **Sneak** + right-click |
+| Fire saddle cannon | Left mouse while riding (not holding a gun) |
+| Cannon Destroy / Damage mode | **V** |
 
 All keys are rebindable under *Options → Controls → Drop Zone*.
 
@@ -41,6 +45,10 @@ All keys are rebindable under *Options → Controls → Drop Zone*.
 - **Shields.** These give absorption hearts. Mini Shields add 2.5 hearts, up to a 5-heart cap. Shield Potions add 5 hearts, up to a 10-heart cap.
 - **Gliders.** Four colours: Azure, Crimson, Emerald and Sunset. You take no fall damage while gliding, and the camera switches to third person.
 - **Emotes.** Wave, Flex, Cheer, Salute, Facepalm, Robot, Disco and Swing Dance. Each dance plays its own note-block beat that nearby players hear. An emote stops when you move or take damage.
+
+**Cannon Saddle.** Works on any mob, including the Ender Dragon. Mobs with no riding controls of their own become steerable: WASD plus where you look, and Jump climbs on flying mobs. Mounts that already have riding controls (tamed horses, modded mounts) keep them. The cannon fires a volley of fireballs: **Destroy** mode breaks blocks and starts fires, **Damage** mode only hurts mobs. Your own blasts and your mount can't hurt you.
+
+**Day counter.** A "Day N" title appears for everyone each time a new day starts, and the current day shows in the top-left corner.
 
 **Crafting and loot.** Everything is craftable, and JEI shows every recipe. Recipes use Forge tags, so modded iron, copper and other ingots work. Gear also shows up in dungeon, mineshaft, outpost, temple, mansion, shipwreck, ancient city and bastion chests.
 
