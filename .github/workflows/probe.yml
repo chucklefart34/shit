@@ -14,22 +14,18 @@ jobs:
       - name: Probe
         run: |
           JAR=$(find ~/.gradle -name 'forge-1.20.1-*_mapped_official_1.20.1.jar' ! -name '*sources*' | head -1)
-          SRC=$(find ~/.gradle -name 'forge-1.20.1-*_mapped_official_1.20.1-sources.jar' | head -1)
-          echo "JAR=$JAR"; echo "SRC=$SRC"
-          for c in net.minecraft.world.entity.Mob net.minecraft.world.entity.LivingEntity net.minecraft.world.entity.Entity; do
-            echo "=== $c"; javap -p -cp "$JAR" $c | grep -E "ControllingPassenger|Ridden|serverAiStep|PassengersRidingOffset|canControlVehicle|positionRider|jumping|isControlledByLocalInstance|aiStep\(|getRiddenSpeed"
-          done
-          echo "=== Explosion"; javap -p -cp "$JAR" net.minecraft.world.level.Explosion | grep -E "Exploder|SourceEntity|getToBlow|public"
-          echo "=== Fireball"; javap -p -cp "$JAR" net.minecraft.world.entity.projectile.Fireball net.minecraft.world.entity.projectile.AbstractHurtingProjectile | grep -E "\(|class"
-          echo "=== Level.explode"; javap -p -cp "$JAR" net.minecraft.world.level.Level | grep explode
-          echo "=== PhaseManager"; javap -p -cp "$JAR" net.minecraft.world.entity.boss.enderdragon.phases.EnderDragonPhaseManager
-          if [ -n "$SRC" ]; then
-            mkdir s && cd s && unzip -q "$SRC" 'net/minecraft/world/entity/Mob.java' 'net/minecraft/world/entity/LivingEntity.java' 'net/minecraft/world/entity/boss/enderdragon/*' 'net/minecraft/client/player/LocalPlayer.java' 'net/minecraft/world/entity/Entity.java'
-            echo "=== Mob.getControllingPassenger"; grep -n -A8 "getControllingPassenger" net/minecraft/world/entity/Mob.java
-            echo "=== LivingEntity ridden"; grep -n -B2 -A14 "void travelRidden\|Vec3 getRiddenInput\|void tickRidden\|float getRiddenSpeed" net/minecraft/world/entity/LivingEntity.java
-            echo "=== LivingEntity aiStep travel call"; grep -n -B3 -A6 "travelRidden(" net/minecraft/world/entity/LivingEntity.java
-            echo "=== Hover phase"; cat net/minecraft/world/entity/boss/enderdragon/phases/DragonHoverPhase.java
-            echo "=== dragon aiStep"; grep -n -A140 "public void aiStep" net/minecraft/world/entity/boss/enderdragon/EnderDragon.java | sed -n '1,170p'
-            echo "=== Entity riding offset"; grep -n -A4 "getPassengersRidingOffset\|protected void positionRider\|public void positionRider" net/minecraft/world/entity/Entity.java
-            echo "=== LocalPlayer passenger packets"; grep -n -B2 -A8 "ServerboundPlayerInputPacket\|ServerboundMoveVehiclePacket" net/minecraft/client/player/LocalPlayer.java
-          fi
+          m() { echo "=== $1 :: $2"; javap -c -p -cp "$JAR" "$1" | awk -v pat="$2" 'index($0,pat)&&/\(/{p=1} p{print} p&&/^$/{exit}' | grep -E "invoke|getfield|putfield|areturn|instanceof|ifnull|ifnonnull|ifeq|ifne|getstatic|^  [a-z]" | head -60; }
+          m net.minecraft.world.entity.Mob "LivingEntity getControllingPassenger"
+          m net.minecraft.world.entity.animal.Pig "LivingEntity getControllingPassenger"
+          m net.minecraft.world.entity.animal.horse.AbstractHorse "LivingEntity getControllingPassenger"
+          m net.minecraft.world.entity.LivingEntity "void travelRidden"
+          m net.minecraft.world.entity.LivingEntity "Vec3 getRiddenInput"
+          m net.minecraft.world.entity.LivingEntity "float getRiddenSpeed"
+          m net.minecraft.world.entity.boss.enderdragon.phases.DragonHoverPhase "void begin"
+          m net.minecraft.world.entity.boss.enderdragon.phases.DragonHoverPhase "Vec3 getFlyTargetLocation"
+          m net.minecraft.world.entity.boss.enderdragon.phases.DragonHoverPhase "void doServerTick"
+          m net.minecraft.world.entity.boss.enderdragon.EnderDragonPhaseManager "void setPhase"
+          echo "=== dragon aiStep calls"; javap -c -p -cp "$JAR" net.minecraft.world.entity.boss.enderdragon.EnderDragon | awk '/public void aiStep\(/{p=1} p{print} p&&/^$/{exit}' | grep -E "invoke" | sed 's/.*Method //' | head -80
+          echo "=== Entity.getPassengersRidingOffset"; javap -c -p -cp "$JAR" net.minecraft.world.entity.Entity | awk '/public double getPassengersRidingOffset/{p=1} p{print} p&&/^$/{exit}'
+          echo "=== Dragon riding offset"; javap -p -cp "$JAR" net.minecraft.world.entity.boss.enderdragon.EnderDragon | grep -E "Riding|positionRider|canRide|rideable|addPassenger|canAddPassenger"
+          echo "=== ForgeEvents"; unzip -l $(find ~/.gradle -name 'forge-1.20.1-47.2.0-universal.jar' | head -1) | grep -E "ExplosionEvent|EntityItemPickupEvent|LivingTickEvent|EntityInteract|TickEvent" | head
