@@ -18,6 +18,16 @@ public final class ServerState {
     private static final Map<UUID, Integer> GLIDING = new HashMap<>();
     private static final Map<UUID, EmoteState> EMOTES = new HashMap<>();
     private static final Map<UUID, Long> NEXT_SHOT = new HashMap<>();
+    private static final Map<UUID, Long> NEXT_CANNON = new HashMap<>();
+
+    public static boolean canFireCannon(ServerPlayer player, long now) {
+        Long next = NEXT_CANNON.get(player.getUUID());
+        return next == null || now + 1 >= next;
+    }
+
+    public static void setNextCannon(ServerPlayer player, long tick) {
+        NEXT_CANNON.put(player.getUUID(), tick);
+    }
 
     // ---------------------------------------------------------------- fire rate
 
@@ -83,12 +93,15 @@ public final class ServerState {
         GLIDING.remove(id);
         EMOTES.remove(id);
         NEXT_SHOT.remove(id);
+        NEXT_CANNON.remove(id);
     }
 
     public static void clearAll() {
         GLIDING.clear();
         EMOTES.clear();
         NEXT_SHOT.clear();
+        NEXT_CANNON.clear();
+        com.dropzone.saddle.SaddleEvents.resetDay();
     }
 
     private ServerState() {}

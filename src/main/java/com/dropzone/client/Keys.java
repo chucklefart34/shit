@@ -14,5 +14,8 @@ public final class Keys {
     public static final KeyMapping EMOTE_WHEEL = new KeyMapping("key.dropzone.emote_wheel",
             KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, CATEGORY);
 
+    public static final KeyMapping CANNON_MODE = new KeyMapping("key.dropzone.cannon_mode",
+            KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
+
     private Keys() {}
 }

@@ -1,6 +1,7 @@
 package com.dropzone.registry;
 
 import com.dropzone.DropZone;
+import com.dropzone.entity.CannonFireballEntity;
 import com.dropzone.entity.GrenadeEntity;
 import com.dropzone.entity.RocketEntity;
 import net.minecraft.world.entity.EntityType;
@@ -25,6 +26,13 @@ public final class ModEntities {
                     .clientTrackingRange(6)
                     .updateInterval(2)
                     .build(DropZone.MODID + ":frag_grenade"));
+
+    public static final RegistryObject<EntityType<CannonFireballEntity>> CANNON_FIREBALL = ENTITIES.register("cannon_fireball",
+            () -> EntityType.Builder.<CannonFireballEntity>of(CannonFireballEntity::new, MobCategory.MISC)
+                    .sized(1.0F, 1.0F)
+                    .clientTrackingRange(10)
+                    .updateInterval(1)
+                    .build(DropZone.MODID + ":cannon_fireball"));
 
     private ModEntities() {}
 }

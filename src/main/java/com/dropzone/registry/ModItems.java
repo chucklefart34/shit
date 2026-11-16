@@ -2,6 +2,7 @@ package com.dropzone.registry;
 
 import com.dropzone.DropZone;
 import com.dropzone.item.AmmoItem;
+import com.dropzone.item.CannonSaddleItem;
 import com.dropzone.item.GliderItem;
 import com.dropzone.item.GrenadeItem;
 import com.dropzone.item.GunItem;
@@ -89,12 +90,16 @@ public final class ModItems {
     public static final RegistryObject<Item> GLIDER_EMERALD = glider("glider_emerald", "emerald", Tier.RARE);
     public static final RegistryObject<Item> GLIDER_SUNSET = glider("glider_sunset", "sunset", Tier.EPIC);
 
+    // ------------------------------------------------------------------ mounts
+    public static final RegistryObject<Item> CANNON_SADDLE = ITEMS.register("cannon_saddle",
+            () -> new CannonSaddleItem(new Item.Properties().stacksTo(1)));
+
     /** Creative tab order: weapons first, then ammo, consumables, gliders, parts. */
     public static List<Supplier<? extends Item>> creativeOrder() {
         return List.of(PISTOL, TACTICAL_SMG, PUMP_SHOTGUN, ASSAULT_RIFLE, BOLT_SNIPER, ROCKET_LAUNCHER, FRAG_GRENADE,
                 LIGHT_AMMO, MEDIUM_AMMO, HEAVY_AMMO, SHELLS, ROCKET,
                 BANDAGE, MED_KIT, MINI_SHIELD, SHIELD_POTION,
-                GLIDER_AZURE, GLIDER_CRIMSON, GLIDER_EMERALD, GLIDER_SUNSET,
+                GLIDER_AZURE, GLIDER_CRIMSON, GLIDER_EMERALD, GLIDER_SUNSET, CANNON_SADDLE,
                 GUN_BARREL, GUN_STOCK, FIRING_MECHANISM);
     }
 

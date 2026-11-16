@@ -26,6 +26,10 @@ public final class DZNetwork {
                 .encoder(S2CGliderState::encode).decoder(S2CGliderState::decode).consumerMainThread(S2CGliderState::handle).add();
         CHANNEL.messageBuilder(S2CEmoteState.class, id++, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(S2CEmoteState::encode).decoder(S2CEmoteState::decode).consumerMainThread(S2CEmoteState::handle).add();
+        CHANNEL.messageBuilder(C2SCannon.class, id++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(C2SCannon::encode).decoder(C2SCannon::decode).consumerMainThread(C2SCannon::handle).add();
+        CHANNEL.messageBuilder(S2CSaddleState.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(S2CSaddleState::encode).decoder(S2CSaddleState::decode).consumerMainThread(S2CSaddleState::handle).add();
     }
 
     public static void sendToServer(Object message) {

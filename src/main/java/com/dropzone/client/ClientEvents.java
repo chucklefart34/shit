@@ -4,7 +4,16 @@ import com.dropzone.DropZone;
 import com.dropzone.emote.Emote;
 import com.dropzone.item.GliderItem;
 import com.dropzone.item.GunItem;
+import com.dropzone.DZConfig;
+import com.dropzone.network.C2SCannon;
 import com.dropzone.network.C2SEmote;
+import com.dropzone.saddle.CannonSaddle;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import com.dropzone.network.C2SFireGun;
 import com.dropzone.network.C2SGlider;
 import com.dropzone.network.C2SReload;
@@ -55,6 +64,21 @@ public final class ClientEvents {
     private static int lastShotTick;
     private static int lastSlot = -1;
 
+    private static int nextCannonTick;
+    private static int lastCannonTick;
+
+    public static float cannonReadiness() {
+        int cd = Math.max(1, DZConfig.CANNON_COOLDOWN.get());
+        return Mth.clamp((clientTicks - lastCannonTick) / (float) cd, 0.0F, 1.0F);
+    }
+
+    /** Riding a saddled mob, in the front seat, not holding a gun. */
+    private static boolean onCannonMount(LocalPlayer player) {
+        Entity mount = player.getVehicle();
+        return mount != null && CannonSaddle.has(mount) && mount.getFirstPassenger() == player
+                && !(player.getMainHandItem().getItem() instanceof GunItem);
+    }
+
     // ---------------------------------------------------------------- helpers
 
     public static boolean isAiming(Player p) {
@@ -98,10 +122,24 @@ public final class ClientEvents {
             if (mc.screen == null && !player.isSpectator()) mc.setScreen(new EmoteWheelScreen());
         }
 
+        while (Keys.CANNON_MODE.consumeClick()) {
+            if (player.getVehicle() != null && CannonSaddle.has(player.getVehicle())) DZNetwork.sendToServer(new C2SCannon(C2SCannon.TOGGLE_MODE));
+        }
+        handleCannon(mc, player);
         handleGun(mc, player);
         handleGliderInput(mc, player);
         handleOwnEmote(player);
         playDanceBeats(mc);
+    }
+
+    private static void handleCannon(Minecraft mc, LocalPlayer player) {
+        if (!onCannonMount(player)) return;
+        boolean attackDown = mc.screen == null && mc.mouseHandler.isMouseGrabbed() && mc.options.keyAttack.isDown();
+        if (!attackDown || clientTicks < nextCannonTick) return;
+        DZNetwork.sendToServer(new C2SCannon(C2SCannon.FIRE));
+        nextCannonTick = clientTicks + DZConfig.CANNON_COOLDOWN.get();
+        lastCannonTick = clientTicks;
+        player.setXRot(Mth.clamp(player.getXRot() - 4.0F, -90.0F, 90.0F)); // kick
     }
 
     private static void handleGun(Minecraft mc, LocalPlayer player) {
@@ -249,7 +287,8 @@ public final class ClientEvents {
     @SubscribeEvent
     public static void onInteractionKey(InputEvent.InteractionKeyMappingTriggered event) {
         LocalPlayer player = Minecraft.getInstance().player;
-        if (player != null && event.isAttack() && player.getItemInHand(event.getHand()).getItem() instanceof GunItem) {
+        if (player != null && event.isAttack()
+                && (player.getItemInHand(event.getHand()).getItem() instanceof GunItem || onCannonMount(player))) {
             event.setCanceled(true);
             event.setSwingHand(false);
         }
@@ -301,9 +340,52 @@ public final class ClientEvents {
         ps.popPose();
     }
 
+    // ---------------------------------------------------------------- saddle + cannon rendering (works for any mob, dragon included)
+
+    @SubscribeEvent
+    public static void onRenderLevel(RenderLevelStageEvent event) {
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_ENTITIES) return;
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null || CannonSaddle.CLIENT_SADDLED.isEmpty()) return;
+        float pt = event.getPartialTick();
+        Vec3 cam = event.getCamera().getPosition();
+        PoseStack ps = event.getPoseStack();
+        MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
+        SaddleCannonModel model = ClientSetup.saddleModel();
+
+        for (Integer id : CannonSaddle.CLIENT_SADDLED) {
+            Entity mob = mc.level.getEntity(id);
+            if (mob == null || mob.isRemoved()) continue;
+            Entity rider = mob.getFirstPassenger();
+            if (rider == mc.player && mc.options.getCameraType().isFirstPerson()) continue;
+
+            double x = Mth.lerp(pt, mob.xo, mob.getX());
+            double y = Mth.lerp(pt, mob.yo, mob.getY()) + mob.getPassengersRidingOffset();
+            double z = Mth.lerp(pt, mob.zo, mob.getZ());
+            float yaw;
+            if (rider != null) yaw = rider.getViewYRot(pt);
+            else if (mob instanceof LivingEntity le) yaw = Mth.rotLerp(pt, le.yBodyRotO, le.yBodyRot) + (mob instanceof EnderDragon ? 180.0F : 0.0F);
+            else yaw = mob.getViewYRot(pt);
+            float pitch = rider != null ? rider.getViewXRot(pt) : 0.0F;
+            float scale = Mth.clamp(0.8F + mob.getBbWidth() * 0.15F, 1.0F, 3.0F);
+
+            ps.pushPose();
+            ps.translate(x - cam.x, y - cam.y, z - cam.z);
+            ps.mulPose(Axis.YP.rotationDegrees(180.0F - yaw));
+            ps.scale(-scale, -scale, scale);
+            model.setPitch(pitch * Mth.DEG_TO_RAD);
+            int light = LevelRenderer.getLightColor(mc.level, BlockPos.containing(x, y, z));
+            model.renderToBuffer(ps, buffers.getBuffer(RenderType.entityCutoutNoCull(SaddleCannonModel.TEXTURE)),
+                    light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+            ps.popPose();
+        }
+        buffers.endBatch();
+    }
+
     @SubscribeEvent
     public static void onLogout(ClientPlayerNetworkEvent.LoggingOut event) {
         ClientState.clear();
+        CannonSaddle.clearClient();
         lastSeenAmmo = -1;
         shotsSinceSync = 0;
     }

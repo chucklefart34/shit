@@ -1,6 +1,10 @@
 package com.dropzone.client;
 
+import com.dropzone.DZConfig;
 import com.dropzone.item.GunItem;
+import com.dropzone.saddle.CannonSaddle;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.entity.Entity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -57,6 +61,37 @@ public final class HudOverlays {
         g.fill(cx, cy - size / 3, cx + 1, cy + size / 3, 0xC0000000);
         g.fill(cx - 1, cy - 1, cx + 2, cy + 2, 0xFFFF2020);
         RenderSystem.disableBlend();
+    };
+
+    /** "Day N" in the top-left corner. */
+    public static final IGuiOverlay DAY = (ForgeGui gui, GuiGraphics g, float partialTick, int width, int height) -> {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null || mc.options.hideGui || mc.options.renderDebug || !DZConfig.DAY_HUD.get()) return;
+        long day = mc.level.getDayTime() / 24000L + 1L;
+        Component text = Component.translatable("hud.dropzone.day", day);
+        int w = mc.font.width(text);
+        g.fill(2, 2, 2 + w + 6, 2 + 13, 0x80000000);
+        g.drawString(mc.font, text, 5, 5, 0xFFD966, true);
+    };
+
+    /** Cannon mode and reload bar while riding a saddled mob. */
+    public static final IGuiOverlay CANNON = (ForgeGui gui, GuiGraphics g, float partialTick, int width, int height) -> {
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer player = mc.player;
+        if (player == null || mc.options.hideGui) return;
+        Entity mount = player.getVehicle();
+        if (mount == null || !CannonSaddle.has(mount) || mount.getFirstPassenger() != player) return;
+        boolean destroy = CannonSaddle.destructive(mount);
+        Component mode = Component.translatable(destroy ? "hud.dropzone.cannon_destroy" : "hud.dropzone.cannon_damage")
+                .withStyle(destroy ? ChatFormatting.RED : ChatFormatting.GOLD);
+        Component line = Component.translatable("hud.dropzone.cannon", mode, Keys.CANNON_MODE.getTranslatedKeyMessage());
+        int y = height - 59;
+        g.drawCenteredString(mc.font, line, width / 2, y, 0xFFFFFF);
+        float ready = ClientEvents.cannonReadiness();
+        int barW = 60;
+        int x0 = width / 2 - barW / 2;
+        g.fill(x0, y + 11, x0 + barW, y + 13, 0xA0000000);
+        g.fill(x0, y + 11, x0 + Math.round(barW * ready), y + 13, ready >= 1.0F ? 0xFFFF7A1A : 0xFF8A5A3A);
     };
 
     private HudOverlays() {}
