@@ -1,0 +1,35 @@
+name: Probe MC internals
+on:
+  push:
+    branches: [probe]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - name: Set up workspace (downloads + decompiles MC)
+        run: chmod +x gradlew && ./gradlew compileJava --no-daemon -q || true
+      - name: Probe
+        run: |
+          JAR=$(find ~/.gradle -name 'forge-1.20.1-*_mapped_official_1.20.1.jar' ! -name '*sources*' | head -1)
+          SRC=$(find ~/.gradle -name 'forge-1.20.1-*_mapped_official_1.20.1-sources.jar' | head -1)
+          echo "JAR=$JAR"; echo "SRC=$SRC"
+          for c in net.minecraft.world.entity.Mob net.minecraft.world.entity.LivingEntity net.minecraft.world.entity.Entity; do
+            echo "=== $c"; javap -p -cp "$JAR" $c | grep -E "ControllingPassenger|Ridden|serverAiStep|PassengersRidingOffset|canControlVehicle|positionRider|jumping|isControlledByLocalInstance|aiStep\(|getRiddenSpeed"
+          done
+          echo "=== Explosion"; javap -p -cp "$JAR" net.minecraft.world.level.Explosion | grep -E "Exploder|SourceEntity|getToBlow|public"
+          echo "=== Fireball"; javap -p -cp "$JAR" net.minecraft.world.entity.projectile.Fireball net.minecraft.world.entity.projectile.AbstractHurtingProjectile | grep -E "\(|class"
+          echo "=== Level.explode"; javap -p -cp "$JAR" net.minecraft.world.level.Level | grep explode
+          echo "=== PhaseManager"; javap -p -cp "$JAR" net.minecraft.world.entity.boss.enderdragon.phases.EnderDragonPhaseManager
+          if [ -n "$SRC" ]; then
+            mkdir s && cd s && unzip -q "$SRC" 'net/minecraft/world/entity/Mob.java' 'net/minecraft/world/entity/LivingEntity.java' 'net/minecraft/world/entity/boss/enderdragon/*' 'net/minecraft/client/player/LocalPlayer.java' 'net/minecraft/world/entity/Entity.java'
+            echo "=== Mob.getControllingPassenger"; grep -n -A8 "getControllingPassenger" net/minecraft/world/entity/Mob.java
+            echo "=== LivingEntity ridden"; grep -n -B2 -A14 "void travelRidden\|Vec3 getRiddenInput\|void tickRidden\|float getRiddenSpeed" net/minecraft/world/entity/LivingEntity.java
+            echo "=== LivingEntity aiStep travel call"; grep -n -B3 -A6 "travelRidden(" net/minecraft/world/entity/LivingEntity.java
+            echo "=== Hover phase"; cat net/minecraft/world/entity/boss/enderdragon/phases/DragonHoverPhase.java
+            echo "=== dragon aiStep"; grep -n -A140 "public void aiStep" net/minecraft/world/entity/boss/enderdragon/EnderDragon.java | sed -n '1,170p'
+            echo "=== Entity riding offset"; grep -n -A4 "getPassengersRidingOffset\|protected void positionRider\|public void positionRider" net/minecraft/world/entity/Entity.java
+            echo "=== LocalPlayer passenger packets"; grep -n -B2 -A8 "ServerboundPlayerInputPacket\|ServerboundMoveVehiclePacket" net/minecraft/client/player/LocalPlayer.java
+          fi
