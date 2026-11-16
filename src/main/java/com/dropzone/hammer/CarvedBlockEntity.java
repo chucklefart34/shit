@@ -6,6 +6,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.Connection;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -63,6 +65,38 @@ public class CarvedBlockEntity extends BlockEntity {
         source = NbtUtils.readBlockState(level != null ? level.holderLookup(Registries.BLOCK) : BuiltInRegistries.BLOCK.asLookup(),
                 tag.getCompound("Source"));
         mask = tag.contains("Mask") ? tag.getInt("Mask") & 0xFF : 0xFF;
+    }
+
+    @Override
+    public ModelData getModelData() {
+        return ModelData.builder().with(CarvedData.PROPERTY, new CarvedData(source, mask)).build();
+    }
+
+    /** Client: new shape arrived from the server, so rebuild the chunk mesh with the new pieces. */
+    private void refreshClient() {
+        if (level != null && level.isClientSide) {
+            requestModelDataUpdate();
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 8);
+        }
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        CompoundTag tag = pkt.getTag();
+        if (tag != null) load(tag);
+        refreshClient();
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag) {
+        load(tag);
+        refreshClient();
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        refreshClient();
     }
 
     @Override

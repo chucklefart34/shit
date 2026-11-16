@@ -48,6 +48,26 @@ public final class ClientSetup {
         };
     }
 
+    /** Swap the carved block's placeholder model for the slicing model. */
+    @SubscribeEvent
+    public static void onModelBake(net.minecraftforge.client.event.ModelEvent.ModifyBakingResult event) {
+        var key = new net.minecraft.client.resources.model.ModelResourceLocation(
+                new net.minecraft.resources.ResourceLocation(DropZone.MODID, "carved_block"), "");
+        var original = event.getModels().get(key);
+        if (original != null) event.getModels().put(key, new CarvedBakedModel(original));
+    }
+
+    /** Grass, leaves etc. keep their biome tint when carved. */
+    @SubscribeEvent
+    public static void onBlockColors(net.minecraftforge.client.event.RegisterColorHandlersEvent.Block event) {
+        event.register((state, level, pos, tint) -> {
+            if (level != null && pos != null && level.getBlockEntity(pos) instanceof com.dropzone.hammer.CarvedBlockEntity c) {
+                return Minecraft.getInstance().getBlockColors().getColor(c.source(), level, pos, tint);
+            }
+            return -1;
+        }, ModBlocks.CARVED_BLOCK.get());
+    }
+
     @SubscribeEvent
     public static void onKeys(RegisterKeyMappingsEvent event) {
         event.register(Keys.RELOAD);
@@ -59,7 +79,6 @@ public final class ClientSetup {
     public static void onRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.ROCKET.get(), ctx -> new ThrownItemRenderer<RocketEntity>(ctx, 1.4F, true));
         event.registerEntityRenderer(ModEntities.GRENADE.get(), ctx -> new ThrownItemRenderer<GrenadeEntity>(ctx, 0.75F, false));
-        event.registerBlockEntityRenderer(ModBlocks.CARVED_BE.get(), CarvedBlockRenderer::new);
         event.registerEntityRenderer(ModEntities.CANNON_FIREBALL.get(), ctx -> new ThrownItemRenderer<CannonFireballEntity>(ctx, 3.0F, true));
     }
 

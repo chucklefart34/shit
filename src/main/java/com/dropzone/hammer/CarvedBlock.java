@@ -66,7 +66,7 @@ public class CarvedBlock extends BaseEntityBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED; // drawn by CarvedBlockRenderer from the source block's model
+        return RenderShape.MODEL; // CarvedBakedModel slices the source block's own model into the remaining pieces
     }
 
     @Nullable
