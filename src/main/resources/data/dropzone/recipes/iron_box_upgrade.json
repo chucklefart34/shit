@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " M ",
+    "MHM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "forge:ingots/iron"
+    },
+    "H": {
+      "tag": "forge:chests/wooden"
+    }
+  },
+  "result": {
+    "item": "dropzone:iron_box_upgrade",
+    "count": 1
+  },
+  "show_notification": true
+}

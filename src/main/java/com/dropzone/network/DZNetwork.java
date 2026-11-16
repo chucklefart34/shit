@@ -30,6 +30,10 @@ public final class DZNetwork {
                 .encoder(C2SCannon::encode).decoder(C2SCannon::decode).consumerMainThread(C2SCannon::handle).add();
         CHANNEL.messageBuilder(S2CSaddleState.class, id++, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(S2CSaddleState::encode).decoder(S2CSaddleState::decode).consumerMainThread(S2CSaddleState::handle).add();
+        CHANNEL.messageBuilder(C2SBoxClick.class, id++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(C2SBoxClick::encode).decoder(C2SBoxClick::decode).consumerMainThread(C2SBoxClick::handle).add();
+        CHANNEL.messageBuilder(S2CBoxContents.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(S2CBoxContents::encode).decoder(S2CBoxContents::decode).consumerMainThread(S2CBoxContents::handle).add();
     }
 
     public static void sendToServer(Object message) {

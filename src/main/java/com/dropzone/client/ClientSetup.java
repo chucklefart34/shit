@@ -7,7 +7,9 @@ import com.dropzone.entity.RocketEntity;
 import com.dropzone.item.GunItem;
 import com.dropzone.registry.ModEntities;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import com.dropzone.registry.ModBlocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
@@ -39,6 +41,7 @@ public final class ClientSetup {
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
+        event.enqueueWork(() -> MenuScreens.register(ModBlocks.STORAGE_BOX_MENU.get(), StorageBoxScreen::new));
         GunItem.clientGameTime = () -> {
             Minecraft mc = Minecraft.getInstance();
             return mc.level != null ? mc.level.getGameTime() : 0L;

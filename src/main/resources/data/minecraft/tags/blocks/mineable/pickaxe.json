@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "dropzone:copper_storage_box",
+    "dropzone:iron_storage_box",
+    "dropzone:gold_storage_box",
+    "dropzone:diamond_storage_box"
+  ]
+}

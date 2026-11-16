@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " M ",
+    "MHM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "forge:ingots/gold"
+    },
+    "H": {
+      "tag": "forge:chests/wooden"
+    }
+  },
+  "result": {
+    "item": "dropzone:gold_box_upgrade",
+    "count": 1
+  },
+  "show_notification": true
+}

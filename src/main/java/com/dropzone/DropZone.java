@@ -1,6 +1,7 @@
 package com.dropzone;
 
 import com.dropzone.network.DZNetwork;
+import com.dropzone.registry.ModBlocks;
 import com.dropzone.registry.ModEntities;
 import com.dropzone.registry.ModItems;
 import com.dropzone.registry.ModLoot;
@@ -23,6 +24,9 @@ public class DropZone {
     public DropZone() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        ModBlocks.BLOCKS.register(modBus);
+        ModBlocks.BLOCK_ENTITIES.register(modBus);
+        ModBlocks.MENUS.register(modBus);
         ModItems.ITEMS.register(modBus);
         ModEntities.ENTITIES.register(modBus);
         ModSounds.SOUNDS.register(modBus);

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "dropzone:block/copper_storage_box_side",
+    "top": "dropzone:block/copper_storage_box_top",
+    "bottom": "dropzone:block/copper_storage_box_top"
+  }
+}
