@@ -8,6 +8,7 @@ public final class DZConfig {
     public static final ForgeConfigSpec.DoubleValue DAMAGE_MULTIPLIER;
     public static final ForgeConfigSpec.BooleanValue REQUIRE_AMMO;
     public static final ForgeConfigSpec.BooleanValue CREATIVE_INFINITE_AMMO;
+    public static final ForgeConfigSpec.IntValue GUN_AMMO_CAPACITY;
     public static final ForgeConfigSpec.BooleanValue BULLETS_BREAK_GLASS;
     public static final ForgeConfigSpec.BooleanValue EXPLOSIONS_BREAK_BLOCKS;
     public static final ForgeConfigSpec.DoubleValue ROCKET_POWER;
@@ -24,6 +25,8 @@ public final class DZConfig {
                 .define("requireAmmo", true);
         CREATIVE_INFINITE_AMMO = b.comment("Creative-mode players reload without using ammo items.")
                 .define("creativeInfiniteAmmo", true);
+        GUN_AMMO_CAPACITY = b.comment("How many reserve rounds each gun stores internally. Matching ammo is pulled out of your inventory into the gun automatically.")
+                .defineInRange("gunAmmoCapacity", 1000, 0, 100000);
         BULLETS_BREAK_GLASS = b.comment("Bullets shatter glass blocks and panes (respects claim/protection mods).")
                 .define("bulletsBreakGlass", true);
         EXPLOSIONS_BREAK_BLOCKS = b.comment("Rockets and grenades destroy blocks.")

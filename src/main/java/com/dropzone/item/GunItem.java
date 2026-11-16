@@ -43,6 +43,7 @@ public class GunItem extends Item {
     public static final String TAG_AMMO = "Ammo";
     public static final String TAG_RELOAD_END = "ReloadEnd";
     public static final String TAG_RELOAD_LEN = "ReloadLen";
+    public static final String TAG_RESERVE = "Reserve";
 
     /** Set by the client at startup so item bars can show reload progress. */
     public static LongSupplier clientGameTime = () -> 0L;
@@ -92,10 +93,52 @@ public class GunItem extends Item {
         return !DZConfig.REQUIRE_AMMO.get() || (player.getAbilities().instabuild && DZConfig.CREATIVE_INFINITE_AMMO.get());
     }
 
-    public int countReserve(Player player) {
+    // ---------------------------------------------------------------- reserve ammo stored inside the gun
+
+    public static int capacity() {
+        return DZConfig.GUN_AMMO_CAPACITY.get();
+    }
+
+    public int getReserve(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        return tag != null ? tag.getInt(TAG_RESERVE) : 0;
+    }
+
+    public void setReserve(ItemStack stack, int amount) {
+        stack.getOrCreateTag().putInt(TAG_RESERVE, Math.max(0, amount));
+    }
+
+    /** Puts up to {@code amount} rounds into this gun's reserve; returns how many fit. */
+    public int store(ItemStack gunStack, int amount) {
+        int fit = Math.min(amount, capacity() - getReserve(gunStack));
+        if (fit <= 0) return 0;
+        setReserve(gunStack, getReserve(gunStack) + fit);
+        return fit;
+    }
+
+    /** Pulls loose ammo items of the right type out of the inventory into this gun. */
+    public void absorbLooseAmmo(Player player, ItemStack gunStack) {
         Item ammo = stats.ammo().get();
         Inventory inv = player.getInventory();
-        int total = 0;
+        boolean changed = false;
+        for (int i = 0; i < inv.getContainerSize() && getReserve(gunStack) < capacity(); i++) {
+            ItemStack s = inv.getItem(i);
+            if (s.is(ammo)) {
+                int stored = store(gunStack, s.getCount());
+                if (stored > 0) {
+                    s.shrink(stored);
+                    changed = true;
+                }
+            }
+        }
+        if (changed) inv.setChanged();
+    }
+
+    /** Total rounds available for reloading: this gun's reserve plus any loose ammo items. */
+    public int countReserve(Player player, ItemStack gunStack) {
+        Item ammo = stats.ammo().get();
+        Inventory inv = player.getInventory();
+        int total = getReserve(gunStack);
         for (int i = 0; i < inv.getContainerSize(); i++) {
             ItemStack s = inv.getItem(i);
             if (s.is(ammo)) total += s.getCount();
@@ -103,10 +146,12 @@ public class GunItem extends Item {
         return total;
     }
 
-    private int takeReserve(Player player, int wanted) {
+    private int takeReserve(Player player, ItemStack gunStack, int wanted) {
+        int fromGun = Math.min(wanted, getReserve(gunStack));
+        setReserve(gunStack, getReserve(gunStack) - fromGun);
+        int taken = fromGun;
         Item ammo = stats.ammo().get();
         Inventory inv = player.getInventory();
-        int taken = 0;
         for (int i = 0; i < inv.getContainerSize() && taken < wanted; i++) {
             ItemStack s = inv.getItem(i);
             if (s.is(ammo)) {
@@ -169,7 +214,7 @@ public class GunItem extends Item {
 
     public boolean tryStartReload(ServerPlayer player, ItemStack stack) {
         if (isReloading(stack) || getAmmo(stack) >= stats.magSize()) return false;
-        if (!hasInfiniteAmmo(player) && countReserve(player) <= 0) {
+        if (!hasInfiniteAmmo(player) && countReserve(player, stack) <= 0) {
             player.displayClientMessage(Component.translatable("message.dropzone.no_ammo",
                     stats.ammo().get().getDescription()).withStyle(ChatFormatting.RED), true);
             return false;
@@ -187,7 +232,7 @@ public class GunItem extends Item {
         cancelReload(stack);
         int ammo = getAmmo(stack);
         int need = stats.magSize() - ammo;
-        int got = hasInfiniteAmmo(player) ? need : takeReserve(player, need);
+        int got = hasInfiniteAmmo(player) ? need : takeReserve(player, stack, need);
         setAmmo(stack, ammo + got);
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.RELOAD_END.get(),
                 SoundSource.PLAYERS, 0.8F, 1.0F);
@@ -195,7 +240,9 @@ public class GunItem extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
-        if (level.isClientSide || !isReloading(stack) || !(entity instanceof Player player)) return;
+        if (level.isClientSide || !(entity instanceof Player player)) return;
+        if (player.tickCount % 5 == 0) absorbLooseAmmo(player, stack);
+        if (!isReloading(stack)) return;
         if (player.getMainHandItem() != stack) {
             cancelReload(stack); // swapping weapons cancels the reload, like the real thing
             return;
@@ -291,6 +338,7 @@ public class GunItem extends Item {
                 + (stats.automatic() ? " " : "")).append(stats.automatic()
                 ? Component.translatable("tooltip.dropzone.auto") : Component.empty())));
         tooltip.add(stat("magazine", Component.literal(getAmmo(stack) + " / " + stats.magSize())));
+        tooltip.add(stat("reserve", Component.literal(getReserve(stack) + " / " + capacity())));
         tooltip.add(stat("reload", Component.literal(fmt(stats.reloadTicks() / 20.0F) + "s")));
         tooltip.add(stat("ammo", stats.ammo().get().getDescription().copy()));
         tooltip.add(Component.translatable("tooltip.dropzone.gun_controls").withStyle(ChatFormatting.DARK_GRAY));

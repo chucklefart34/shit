@@ -32,7 +32,7 @@ public final class HudOverlays {
             color = 0xFFAA00;
         } else {
             int mag = ClientEvents.displayedAmmo(stack, gun);
-            String reserve = GunItem.hasInfiniteAmmo(player) ? "∞" : Integer.toString(gun.countReserve(player));
+            String reserve = GunItem.hasInfiniteAmmo(player) ? "∞" : Integer.toString(gun.countReserve(player, stack));
             text = Component.literal(mag + " / " + reserve);
             color = mag == 0 ? 0xFF5555 : mag <= gun.stats().magSize() / 4 ? 0xFFFF55 : 0xFFFFFF;
         }

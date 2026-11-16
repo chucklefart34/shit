@@ -2,6 +2,11 @@ package com.dropzone.server;
 
 import com.dropzone.DropZone;
 import com.dropzone.item.GliderItem;
+import com.dropzone.item.GunItem;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
@@ -37,6 +42,32 @@ public final class CommonEvents {
                     || player.isUsingItem() || player.isShiftKeyDown() || player.isPassenger()) {
                 ServerState.setEmote(player, -1);
             }
+        }
+    }
+
+    /** Ammo you walk over goes straight into matching guns, even with a full inventory. */
+    @SubscribeEvent
+    public static void onPickup(EntityItemPickupEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        ItemEntity itemEntity = event.getItem();
+        ItemStack loot = itemEntity.getItem();
+        if (loot.isEmpty()) return;
+        Inventory inv = player.getInventory();
+        int absorbed = 0;
+        for (int i = 0; i < inv.getContainerSize() && !loot.isEmpty(); i++) {
+            ItemStack s = inv.getItem(i);
+            if (s.getItem() instanceof GunItem gun && gun.stats().ammo().get() == loot.getItem()) {
+                int stored = gun.store(s, loot.getCount());
+                loot.shrink(stored);
+                absorbed += stored;
+            }
+        }
+        if (absorbed <= 0) return;
+        inv.setChanged();
+        player.take(itemEntity, absorbed);
+        if (loot.isEmpty()) {
+            itemEntity.discard();
+            event.setCanceled(true);
         }
     }
 

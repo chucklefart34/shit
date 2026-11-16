@@ -7,15 +7,15 @@
   "item.dropzone.bolt_sniper": "Bolt-Action Sniper",
   "item.dropzone.rocket_launcher": "Rocket Launcher",
   "item.dropzone.light_ammo": "Light Bullets",
-  "item.dropzone.light_ammo.desc": "For pistols and SMGs",
+  "item.dropzone.light_ammo.desc": "For pistols and SMGs \u2022 loads into matching guns automatically",
   "item.dropzone.medium_ammo": "Medium Bullets",
-  "item.dropzone.medium_ammo.desc": "For assault rifles",
+  "item.dropzone.medium_ammo.desc": "For assault rifles \u2022 loads into matching guns automatically",
   "item.dropzone.heavy_ammo": "Heavy Bullets",
-  "item.dropzone.heavy_ammo.desc": "For sniper rifles",
+  "item.dropzone.heavy_ammo.desc": "For sniper rifles \u2022 loads into matching guns automatically",
   "item.dropzone.shells": "Shells",
-  "item.dropzone.shells.desc": "For shotguns",
+  "item.dropzone.shells.desc": "For shotguns \u2022 loads into matching guns automatically",
   "item.dropzone.rocket": "Rocket",
-  "item.dropzone.rocket.desc": "For rocket launchers",
+  "item.dropzone.rocket.desc": "For rocket launchers \u2022 loads into matching guns automatically",
   "item.dropzone.frag_grenade": "Frag Grenade",
   "item.dropzone.frag_grenade.desc": "Right-click to throw. Bounces, then explodes after 2.5s.",
   "item.dropzone.bandage": "Bandage",
@@ -80,5 +80,6 @@
   "subtitles.dropzone.gun.dry_fire": "Gun clicks empty",
   "subtitles.dropzone.gun.hit": "Hit marker",
   "subtitles.dropzone.gun.headshot": "Headshot",
-  "subtitles.dropzone.glider.deploy": "Glider deploys"
+  "subtitles.dropzone.glider.deploy": "Glider deploys",
+  "tooltip.dropzone.reserve": "Reserve"
 }
